@@ -1,0 +1,107 @@
+services:
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      # InfluxDB initial setup
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
+      - DOCKER_INFLUXDB_INIT_ORG=adelaide-influx-ug7
+      - DOCKER_INFLUXDB_INIT_BUCKET=influx-bucket
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=influx-admin-token-123
+      - DOCKER_INFLUXDB_INIT_RETENTION=30d
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - influxdb-config:/etc/influxdb2
+      - ./bird-migration.line:/data/bird-migration.line
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3006:3006"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_HTTP_ADDR=0.0.0.0
+      - GF_SERVER_HTTP_PORT=3006
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - grafana-provisioning:/etc/grafana/provisioning
+    restart: unless-stopped
+    depends_on:
+      - influxdb
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    container_name: influx-frontend
+    ports:
+      - "5184:5184"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=http://localhost:3005/api
+      - VITE_INFLUXDB_URL=http://localhost:8086
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    container_name: influx-backend
+    ports:
+      - "3005:3005"
+    environment:
+      - NODE_ENV=development
+      - PORT=3005
+      - INFLUXDB_URL=http://influxdb:8086
+      - JWT_SECRET=fced90c6b7b829b55291d48146095b470036a2cc
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=atsys_influx
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - CHOKIDAR_USEPOLLING=true
+      - GRAFANA_URL=http://grafana:3006
+      - GRAFANA_USERNAME=admin
+      - GRAFANA_PASSWORD=admin123
+    volumes:
+      - ./apps/backend:/app
+    depends_on:
+      - postgres
+      - influxdb
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=atsys_influx
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  influxdb-data:
+    driver: local
+  influxdb-config:
+    driver: local
+  postgres-data:
+    driver: local
+  grafana-data:
+    driver: local
+  grafana-provisioning:
+    driver: local
