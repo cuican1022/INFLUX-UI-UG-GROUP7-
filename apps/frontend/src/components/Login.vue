@@ -1,49 +1,55 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { toast } from 'vue-sonner'
-import { useAuthStore } from '../stores/auth'
+import { ref } from "vue";
+import { toast } from "vue-sonner";
+import { useAuthStore } from "../stores/auth";
 
-import influxdbLogo from '../assets/influxdb-logo.png'
-import atsysLogo from '../assets/atsys-logo.svg'
-import Popup from './ui/Popup.vue'
+import influxdbLogo from "../assets/influxdb-logo.png";
+import atsysLogo from "../assets/atsys-logo.svg";
+import Popup from "./ui/Popup.vue";
 
 // lucide-vue-next icons
-import { Eye, EyeOff } from 'lucide-vue-next'
+import { Eye, EyeOff } from "lucide-vue-next";
 
-const authStore = useAuthStore()
+const authStore = useAuthStore();
 
-const apiToken = ref('')
-const organization = ref('')
-const isFading = ref(false)
+const apiToken = ref("");
+const organization = ref("");
+const isFading = ref(false);
 
 // toggle show/hide token
-const showToken = ref(false)
-const toggleToken = () => { showToken.value = !showToken.value }
+const showToken = ref(false);
+const toggleToken = () => {
+  showToken.value = !showToken.value;
+};
 
 const handleSubmit = async () => {
   if (!apiToken.value.trim()) {
-    toast.error('Please enter an API token')
-    return
+    toast.error("Please enter an API token");
+    return;
   }
   if (!organization.value.trim()) {
-    toast.error('Please enter an organization name')
-    return
+    toast.error("Please enter an organization name");
+    return;
   }
 
-  const result = await authStore.login(apiToken.value, organization.value)
+  const result = await authStore.login(apiToken.value, organization.value);
 
   if (result.success) {
-    toast.success('Authentication successful!')
-    isFading.value = true
+    toast.success("Authentication successful!");
+    isFading.value = true;
   } else {
-    toast.error(result.message || 'Authentication failed')
+    toast.error(result.message || "Authentication failed");
   }
-}
+};
 </script>
 
 <template>
   <Transition name="fade-out">
-    <div v-if="!authStore.isLoggedIn" class="login-container" :class="{ 'fading': isFading }">
+    <div
+      v-if="!authStore.isLoggedIn"
+      class="login-container"
+      :class="{ fading: isFading }"
+    >
       <div class="dot-pattern"></div>
 
       <div class="logo-container">
@@ -60,10 +66,10 @@ const handleSubmit = async () => {
           <form @submit.prevent="handleSubmit" class="login-form">
             <div class="form-group">
               <label for="organization">Organization</label>
-              <input 
+              <input
                 id="organization"
                 v-model="organization"
-                type="text" 
+                type="text"
                 placeholder="Enter your InfluxDB organization name"
                 required
               />
@@ -72,10 +78,10 @@ const handleSubmit = async () => {
             <div class="form-group">
               <label for="apiToken">API Token</label>
               <div class="input-with-icon">
-                <input 
+                <input
                   id="apiToken"
                   v-model="apiToken"
-                  :type="showToken ? 'text' : 'password'" 
+                  :type="showToken ? 'text' : 'password'"
                   placeholder="Enter your InfluxDB API token"
                   autocomplete="off"
                   autocapitalize="off"
@@ -83,7 +89,10 @@ const handleSubmit = async () => {
                   inputmode="text"
                   required
                 />
-                <Popup :content="showToken ? 'Hide token' : 'Show token'" placement="top">
+                <Popup
+                  :content="showToken ? 'Hide token' : 'Show token'"
+                  placement="top"
+                >
                   <button
                     type="button"
                     class="icon-btn"
@@ -99,9 +108,7 @@ const handleSubmit = async () => {
               </div>
             </div>
 
-            <button type="submit" class="submit-btn">
-              Connect
-            </button>
+            <button type="submit" class="submit-btn">Connect</button>
           </form>
         </div>
       </div>
@@ -151,16 +158,20 @@ const handleSubmit = async () => {
   background-image: radial-gradient(circle, #141414 1px, transparent 1px);
   background-size: 1.5vw 1.5vw;
   background-position: 0 0;
-  mask: linear-gradient(150deg, 
-    rgba(255, 255, 255, 1) 0%, 
-    rgba(255, 255, 255, 0.8) 20%, 
-    rgba(255, 255, 255, 0.4) 40%, 
-    rgba(255, 255, 255, 0) 70%);
-  -webkit-mask: linear-gradient(150deg, 
-    rgba(255, 255, 255, 1) 0%, 
-    rgba(255, 255, 255, 0.8) 20%, 
-    rgba(255, 255, 255, 0.4) 40%, 
-    rgba(255, 255, 255, 0) 70%);
+  mask: linear-gradient(
+    150deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.8) 20%,
+    rgba(255, 255, 255, 0.4) 40%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  -webkit-mask: linear-gradient(
+    150deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.8) 20%,
+    rgba(255, 255, 255, 0.4) 40%,
+    rgba(255, 255, 255, 0) 70%
+  );
   z-index: -1;
 }
 

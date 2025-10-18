@@ -1,16 +1,23 @@
 <script setup lang="ts">
-import { TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipRoot, TooltipTrigger } from 'radix-vue'
+import {
+  TooltipArrow,
+  TooltipContent,
+  TooltipPortal,
+  TooltipProvider,
+  TooltipRoot,
+  TooltipTrigger,
+} from "radix-vue";
 
 interface Props {
-  text: string
-  sideOffset?: number
-  delayDuration?: number
+  text: string;
+  sideOffset?: number;
+  delayDuration?: number;
 }
 
 withDefaults(defineProps<Props>(), {
   sideOffset: 5,
   delayDuration: 100,
-})
+});
 </script>
 
 <template>
@@ -20,10 +27,7 @@ withDefaults(defineProps<Props>(), {
         <slot />
       </TooltipTrigger>
       <TooltipPortal>
-        <TooltipContent
-          class="tooltip-content"
-          :side-offset="sideOffset"
-        >
+        <TooltipContent class="tooltip-content" :side-offset="sideOffset">
           {{ text }}
           <TooltipArrow class="tooltip-arrow" />
         </TooltipContent>
@@ -40,7 +44,8 @@ withDefaults(defineProps<Props>(), {
   line-height: 1.25 !important;
   color: #374151 !important;
   background-color: white !important;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1), 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1),
+    0 0.0625rem 0.125rem rgba(0, 0, 0, 0.06) !important;
   user-select: none !important;
   animation-duration: 200ms !important;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -51,19 +56,19 @@ withDefaults(defineProps<Props>(), {
   z-index: 9 !important;
 }
 
-.tooltip-content[data-state='delayed-open'][data-side='top'] {
+.tooltip-content[data-state="delayed-open"][data-side="top"] {
   animation-name: slideDownAndFade !important;
 }
 
-.tooltip-content[data-state='delayed-open'][data-side='right'] {
+.tooltip-content[data-state="delayed-open"][data-side="right"] {
   animation-name: slideLeftAndFade !important;
 }
 
-.tooltip-content[data-state='delayed-open'][data-side='bottom'] {
+.tooltip-content[data-state="delayed-open"][data-side="bottom"] {
   animation-name: slideUpAndFade !important;
 }
 
-.tooltip-content[data-state='delayed-open'][data-side='left'] {
+.tooltip-content[data-state="delayed-open"][data-side="left"] {
   animation-name: slideRightAndFade !important;
 }
 

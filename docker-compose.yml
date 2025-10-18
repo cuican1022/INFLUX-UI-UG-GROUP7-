@@ -38,6 +38,7 @@ services:
       - influxdb
 
   frontend:
+    image: influx-frontend:latest
     build:
       context: ./apps/frontend
       dockerfile: Dockerfile
@@ -54,6 +55,7 @@ services:
     restart: unless-stopped
 
   backend:
+    image: influx-backend:latest
     build:
       context: ./apps/backend
       dockerfile: Dockerfile

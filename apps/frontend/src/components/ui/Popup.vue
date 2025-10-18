@@ -1,5 +1,13 @@
+<script setup lang="ts">
+import Tooltip from "./Tooltip.vue";
+
+defineProps<{
+  content?: string;
+}>();
+</script>
+
 <template>
-  <Tooltip>
+  <Tooltip text="hello">
     <template #trigger>
       <!-- Default slot for the trigger element -->
       <slot />
@@ -11,11 +19,3 @@
     </template>
   </Tooltip>
 </template>
-
-<script setup lang="ts">
-import Tooltip from "./Tooltip.vue";
-
-defineProps<{
-  content?: string;
-}>();
-</script>
