@@ -1,21 +1,30 @@
 <script setup lang="ts">
 import Tooltip from "./Tooltip.vue";
 
-defineProps<{
-  content?: string;
-}>();
+interface Props {
+  content: string;
+  placement?: "top" | "right" | "bottom" | "left";
+  offset?: number;
+  delay?: number;
+  align?: "start" | "center" | "end"; 
+}
+
+withDefaults(defineProps<Props>(), {
+  placement: "top",
+  offset: 6,
+  delay: 100,
+  align: "center",
+});
 </script>
 
 <template>
-  <Tooltip text="hello">
-    <template #trigger>
-      <!-- Default slot for the trigger element -->
-      <slot />
-    </template>
-
-    <template #content>
-      <!-- Tooltip text -->
-      <slot name="content">{{ content }}</slot>
-    </template>
+  <Tooltip
+    :text="content"
+    :side="placement"
+    :side-offset="offset"
+    :delay-duration="delay"
+    :align="align"
+  >
+    <slot />
   </Tooltip>
 </template>

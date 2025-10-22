@@ -53,21 +53,21 @@ withDefaults(defineProps<Props>(), {
   border: 1px solid #e5e7eb !important;
   max-width: 12rem !important;
   text-align: center !important;
-  z-index: 9 !important;
+
+  z-index: 9999 !important;
+  position: relative !important;
+  pointer-events: none !important;
 }
 
 .tooltip-content[data-state="delayed-open"][data-side="top"] {
   animation-name: slideDownAndFade !important;
 }
-
 .tooltip-content[data-state="delayed-open"][data-side="right"] {
   animation-name: slideLeftAndFade !important;
 }
-
 .tooltip-content[data-state="delayed-open"][data-side="bottom"] {
   animation-name: slideUpAndFade !important;
 }
-
 .tooltip-content[data-state="delayed-open"][data-side="left"] {
   animation-name: slideRightAndFade !important;
 }
@@ -78,46 +78,19 @@ withDefaults(defineProps<Props>(), {
 }
 
 @keyframes slideUpAndFade {
-  from {
-    opacity: 0;
-    transform: translateY(0.125rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(0.125rem); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes slideRightAndFade {
-  from {
-    opacity: 0;
-    transform: translateX(-0.125rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-0.125rem); }
+  to   { opacity: 1; transform: translateX(0); }
 }
-
 @keyframes slideDownAndFade {
-  from {
-    opacity: 0;
-    transform: translateY(-0.125rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-0.125rem); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes slideLeftAndFade {
-  from {
-    opacity: 0;
-    transform: translateX(0.125rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(0.125rem); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 </style>
